@@ -4,8 +4,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.otus.hw.service.TestRunnerService;
 
-import java.util.function.ToDoubleBiFunction;
-
 public class Application {
     public static void main(String[] args) {
 
