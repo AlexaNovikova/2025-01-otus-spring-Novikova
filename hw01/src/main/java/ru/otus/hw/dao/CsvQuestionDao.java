@@ -2,15 +2,14 @@ package ru.otus.hw.dao;
 
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ClassPathResource;
 import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.dao.dto.QuestionDto;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
 
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,10 +19,11 @@ public class CsvQuestionDao implements QuestionDao {
     @Override
     public List<Question> findAll() {
         List<QuestionDto> questions;
-        try {
-            File file = new ClassPathResource(fileNameProvider.getTestFileName()).getFile();
+        try (var fileInputStream = this.getClass().getResourceAsStream(fileNameProvider.getTestFileName())) {
+            assert fileInputStream != null;
+            var inputStreamReader = new InputStreamReader(fileInputStream);
             questions = new CsvToBeanBuilder
-                    (new FileReader(file))
+                    (inputStreamReader)
                     .withType(QuestionDto.class)
                     .withSeparator(';')
                     .withSkipLines(1).build().parse();
