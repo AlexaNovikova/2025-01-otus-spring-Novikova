@@ -14,7 +14,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-@DisplayName("Csv reader dao тест")
+@DisplayName("Тестирование класса CsvQuestionDao, ответственного за парсинг csv файла с вопросами")
 @ExtendWith(MockitoExtension.class)
 class CsvQuestionDaoTest {
 
@@ -24,7 +24,7 @@ class CsvQuestionDaoTest {
     @InjectMocks
     private CsvQuestionDao csvQuestionDao;
 
-    @DisplayName("должен корректно парсить cvs файл и получать список объектов Question ")
+    @DisplayName("метод должен корректно парсить cvs файл и возвращать список объектов типа Question ")
     @Test
     void findAll() {
         var expectedQuestionList = new ArrayList<Question>();

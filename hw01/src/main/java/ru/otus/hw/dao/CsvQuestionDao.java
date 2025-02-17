@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @RequiredArgsConstructor
 public class CsvQuestionDao implements QuestionDao {
     private final TestFileNameProvider fileNameProvider;
@@ -20,13 +22,16 @@ public class CsvQuestionDao implements QuestionDao {
     public List<Question> findAll() {
         List<QuestionDto> questions;
         try (var fileInputStream = this.getClass().getResourceAsStream(fileNameProvider.getTestFileName())) {
-            assert fileInputStream != null;
+            if (isNull(fileInputStream)) {
+                return List.of();
+            }
             var inputStreamReader = new InputStreamReader(fileInputStream);
-            questions = new CsvToBeanBuilder
-                    (inputStreamReader)
+            questions = new CsvToBeanBuilder(inputStreamReader)
                     .withType(QuestionDto.class)
                     .withSeparator(';')
-                    .withSkipLines(1).build().parse();
+                    .withSkipLines(1)
+                    .build()
+                    .parse();
         } catch (IOException e) {
             throw new QuestionReadException(e.getMessage());
         }
