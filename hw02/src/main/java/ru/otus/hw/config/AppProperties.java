@@ -2,21 +2,21 @@ package ru.otus.hw.config;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.stereotype.Component;
 
 @Data
-@Configuration
-@PropertySource("classpath:application.properties")
+@Component
 public class AppProperties implements TestConfig, TestFileNameProvider {
 
     // внедрить свойство из application.properties
-    @Value("${test.rightAnswersCountToPass}")
-    private int rightAnswersCountToPass;
+    private final int rightAnswersCountToPass;
 
     // внедрить свойство из application.properties
-    @Value("${test.fileName}")
-    private String testFileName;
+    private final String testFileName;
+
+    public AppProperties(@Value("${test.rightAnswersCountToPass}") int rightAnswersCountToPass,
+                         @Value("${test.fileName}") String testFileName) {
+        this.rightAnswersCountToPass = rightAnswersCountToPass;
+        this.testFileName = testFileName;
+    }
 }
