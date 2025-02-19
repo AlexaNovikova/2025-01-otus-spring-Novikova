@@ -1,10 +1,14 @@
 package ru.otus.hw.config;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 
-@AllArgsConstructor
 @Data
-public class AppProperties implements TestFileNameProvider {
+public class AppProperties implements TestConfig, TestFileNameProvider {
+
+    // внедрить свойство из application.properties
+    private int rightAnswersCountToPass;
+
+    // внедрить свойство из application.properties
     private String testFileName;
 }
