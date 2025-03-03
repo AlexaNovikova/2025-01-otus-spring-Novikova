@@ -6,7 +6,6 @@ import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
-import ru.otus.hw.exceptions.CheckAnswerException;
 
 @Service
 @RequiredArgsConstructor
@@ -27,14 +26,14 @@ public class TestServiceImpl implements TestService {
         var number = 1;
         for (var question : questions) {
             var isAnswerValid = false;
-            var answer = printQuestionAndGetTheAnswer(question, number++);
+            var answer = printQuestionAndGetAnswer(question, number++);
             isAnswerValid = checkAnswer(answer, question);
             testResult.applyAnswer(question, isAnswerValid);
         }
         return testResult;
     }
 
-    private int printQuestionAndGetTheAnswer(Question question, int number) {
+    private int printQuestionAndGetAnswer(Question question, int number) {
         ioService.printLine(questionConverter.convertQuestionToString(number, question));
         return ioService.readIntForRangeWithPrompt(1, question.answers().size(),
                 "Input your answer: ",
