@@ -27,7 +27,7 @@ public class TestServiceImpl implements TestService {
         var number = 1;
         for (var question : questions) {
             var isAnswerValid = false;
-            var answer = printQuestionAndGetTheAnswer(question,number++);
+            var answer = printQuestionAndGetTheAnswer(question, number++);
             isAnswerValid = checkAnswer(answer, question);
             testResult.applyAnswer(question, isAnswerValid);
         }
@@ -41,10 +41,7 @@ public class TestServiceImpl implements TestService {
                 "Error input. Please input number from 1 to " + question.answers().size());
     }
 
-    private boolean checkAnswer(int answer, Question question) {
-        if (answer > question.answers().size() || answer < 1) {
-            throw new CheckAnswerException("Answer number is out of range.");
-        }
-        return question.answers().get(answer - 1).isCorrect();
+    private boolean checkAnswer(int answerNumber, Question question) {
+        return question.answers().get(answerNumber - 1).isCorrect();
     }
 }

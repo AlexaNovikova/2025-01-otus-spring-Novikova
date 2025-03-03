@@ -20,6 +20,6 @@ public class QuestionConverterImpl implements QuestionConverter {
         var formattedAnswersList = IntStream.range(1, answers.size() + 1)
                 .mapToObj(k -> String.format(FORMATTED_ANSWER, k, answers.get(k - 1).text()))
                 .collect(Collectors.joining());
-       return formattedQuestionText + formattedAnswersList;
+        return formattedQuestionText + formattedAnswersList;
     }
 }
