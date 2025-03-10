@@ -1,0 +1,15 @@
+test:
+  rightAnswersCountToPass: 3
+  locale: en-US
+  fileNameByLocaleTag:
+    ru-RU: questions_ru.csv
+    en-US: questions.csv
+logging:
+  level:
+    root: ERROR
+spring:
+  main:
+    allow-circular-references: true
+  shell:
+    interactive:
+      enabled: true
