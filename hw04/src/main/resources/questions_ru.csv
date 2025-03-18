@@ -1,0 +1,7 @@
+# Добавить сюда своих вопросов. Эту строку надо пропустить при настройке CsvToBean (withSkipLines)
+Есть ли жизнь на Марсе?;Это науке пока не известно%true|Конечно. Красные (НЛО) это с Марса. А зеленые (НЛО) с Венеры%false|Точно нет%false
+Как нужно загружать ресурс из jar в Java?;ClassLoader#geResourceAsStream или ClassPathResource#getInputStream%true|ClassLoader#geResource#getFile + FileReader%false|Wingardium Leviosa%false
+Какой предпочтительный способ реакции на исключения?;@SneakyThrow%false|e.printStackTrace()%false|Проброс дальше с предварительным оборачиванием в бизнес-исключение (например, QuestionReadException)%true|Игнорирование исключения%false
+Что обозначает тип void?;Возвращается пустое место в памяти, чтобы разработчики могли его использовать%false|void не поддерживается в java%false|void не возвращает ничего%true|null%false
+Какое из следующих утверждений о языке Java верно?;Процедурный и ООП подходы поддерживаются в Java%true|Java поддерживает только процедурный стиль программирования%false|Java поддерживает только ООП подход%false|Ничего из вышеперечисленного%false
+Какое слово является ключевым в java?;implement%false|friend%false|null%false|synchronized%true
