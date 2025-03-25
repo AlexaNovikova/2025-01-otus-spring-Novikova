@@ -9,10 +9,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.JpaCommentRepository;
-import ru.otus.hw.repositories.JpaCommentRepositoryTest;
 
-
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -33,19 +30,20 @@ public class BookServiceIntegrationTest {
     private JpaCommentRepository jpaCommentRepository;
 
     @DisplayName(" должен загружать книгу по id со всеми связанными сущностями")
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void shouldFindBookById() {
         var optionalActualBook = bookService.findById(BOOK_ID);
         assertThat(optionalActualBook).isPresent();
-        var book = optionalActualBook.get();
-        assertDoesNotThrow(book::getAuthor);
-        assertDoesNotThrow(book::getGenre);
-        assertDoesNotThrow(book::getComments);
+        if (optionalActualBook.isPresent()) {
+            var book = optionalActualBook.get();
+            assertThat(book.getTitle()).isEqualTo("BookTitle_1");
+            assertDoesNotThrow(book::getAuthor);
+            assertDoesNotThrow(book::getGenre);
+            assertDoesNotThrow(book::getComments);
+        }
     }
 
     @DisplayName(" должен загружать все книги со всеми связанными сущностями")
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void shouldFindAllBooks() {
         var actualBooksList = bookService.findAll();
@@ -57,11 +55,11 @@ public class BookServiceIntegrationTest {
     }
 
     @DisplayName(" должен сохранить новую книгу с указанными автором и жанром")
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void shouldSaveNewBookWithSpecifiedAuthorAndGenre() {
-        Book saved = bookService.save(0, "NewBook", 1, 1);
-        long id = saved.getId();
+        var saved = bookService.save(0, "NewBook", 1, 1);
+        var id = saved.getId();
         assertThat(id).isNotZero();
         var optionalBookFromDB = bookService.findById(id);
         assertThat(optionalBookFromDB).isPresent()
@@ -72,7 +70,7 @@ public class BookServiceIntegrationTest {
     }
 
     @DisplayName(" должен обновить книгу с указанным id")
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void shouldUpdateBookWithSpecifiedId() {
         Book updated = bookService.save(1, "UpdatedBook", 2, 2);
@@ -88,7 +86,6 @@ public class BookServiceIntegrationTest {
 
     @DisplayName(" должен выбросить исключение EntityNotFoundException " +
             "при указании несуществующего id для автора либо жанра")
-    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void shouldThrowEntityNotFoundException() {
         assertThrows(EntityNotFoundException.class, () ->
@@ -98,6 +95,7 @@ public class BookServiceIntegrationTest {
     }
 
     @DisplayName(" должен удалять книгу по id вместе с комментариями")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void shouldDeleteBookByIdWithAllComments() {
         bookService.deleteById(1L);

@@ -25,7 +25,7 @@ public class JpaAuthorRepositoryTest {
 
     @DisplayName(" должен загружать автора по id")
     @Test
-    void shouldFindAuthorById(){
+    void shouldFindAuthorById() {
         var optionalActualAuthor = jpaAuthorRepository.findById(AUTHOR_ID);
         var expectedAuthor = testEntityManager.find(Author.class, AUTHOR_ID);
         assertThat(optionalActualAuthor)
@@ -35,7 +35,7 @@ public class JpaAuthorRepositoryTest {
 
     @DisplayName(" должен загружать список всех авторов")
     @Test
-    void shouldFindAllAuthors(){
+    void shouldFindAllAuthors() {
         var actualAuthorsList = jpaAuthorRepository.findAll();
         var expectedAuthorsList = testEntityManager
                 .getEntityManager()
@@ -43,5 +43,4 @@ public class JpaAuthorRepositoryTest {
                 .getResultList();
         assertThat(actualAuthorsList).containsExactlyElementsOf(expectedAuthorsList);
     }
-
 }

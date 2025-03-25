@@ -25,7 +25,7 @@ public class JpaGenreRepositoryTest {
 
     @DisplayName(" должен загружать список всех жанров")
     @Test
-    void shouldFindAllGenres(){
+    void shouldFindAllGenres() {
         var actualGenresList = jpaGenreRepository.findAll();
         var expectedGenresList = testEntityManager
                 .getEntityManager()
@@ -36,7 +36,7 @@ public class JpaGenreRepositoryTest {
 
     @DisplayName(" должен находить жанр по id")
     @Test
-    void shouldFindGenreById(){
+    void shouldFindGenreById() {
         var optionalActualGenre = jpaGenreRepository.findById(GENRE_ID);
         var expectedGenre = testEntityManager.find(Genre.class, GENRE_ID);
         assertThat(optionalActualGenre).isPresent().get()
