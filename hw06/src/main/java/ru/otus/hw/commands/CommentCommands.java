@@ -29,14 +29,14 @@ public class CommentCommands {
 
     // acbi 1
     @ShellMethod(value = "Find all comments for book", key = "acbi")
-    public String findAllAuthors(long bookId) {
+    public String findAllCommentsForBook (long bookId) {
         return commentService.findByBookId(bookId).stream()
                 .map(commentConverter::commentToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
     //cins newComment 1
-    @ShellMethod(value = "Add new command for book", key = "cins")
+    @ShellMethod(value = "Add new comment for book", key = "cins")
     public String addCommentForBook(String commentText, long bookId) {
         try {
             var savedComment = commentService.save(0, commentText, bookId);

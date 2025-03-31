@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.otus.hw.converters.BookConverter;
+import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.services.BookService;
 
@@ -28,7 +29,7 @@ public class BookCommands {
     @ShellMethod(value = "Find book by id", key = "bbid")
     public String findBookById(long id) {
         return bookService.findById(id)
-                .map(bookConverter::bookToString)
+                .map(bookConverter::bookToStringWithComments)
                 .orElse("Book with id %d not found".formatted(id));
     }
 
@@ -36,7 +37,8 @@ public class BookCommands {
     @ShellMethod(value = "Insert book", key = "bins")
     public String insertBook(String title, long authorId, long genreId) {
         try {
-            var savedBook = bookService.save(0, title, authorId, genreId);
+            var savedBook = bookService.save(new BookDto(
+                    0, title, authorId, genreId));
             return bookConverter.bookToString(savedBook);
         } catch (EntityNotFoundException e) {
             return e.getMessage();
@@ -47,7 +49,8 @@ public class BookCommands {
     @ShellMethod(value = "Update book", key = "bupd")
     public String updateBook(long id, String title, long authorId, long genreId) {
         try {
-            var savedBook = bookService.save(id, title, authorId, genreId);
+            var savedBook = bookService.save(new BookDto(
+                    id, title, authorId, genreId));
             return bookConverter.bookToString(savedBook);
         } catch (EntityNotFoundException e) {
             return e.getMessage();

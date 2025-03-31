@@ -34,8 +34,7 @@ import java.util.Objects;
 @Builder(toBuilder = true)
 @NamedEntityGraph(name = "book-entity-graph",
         attributeNodes = {@NamedAttributeNode("author"),
-                @NamedAttributeNode("genre"),
-                @NamedAttributeNode("comments")})
+                @NamedAttributeNode("genre")})
 public class Book {
 
     @Id
@@ -59,6 +58,13 @@ public class Book {
     @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "book")
     private List<Comment> comments;
+
+    public Book(long id, String title, Author author, Genre genre) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+    }
 
     @Override
     public boolean equals(Object o) {

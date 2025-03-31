@@ -28,7 +28,8 @@ public class JpaBookRepository implements BookRepository {
     @Override
     public Optional<Book> findById(long id) {
         EntityGraph<?> bookEntityGraph = entityManager.getEntityGraph("book-entity-graph");
-        TypedQuery<Book> bookTypedQuery = entityManager.createQuery("Select b from Book b where b.id = :id", Book.class);
+        TypedQuery<Book> bookTypedQuery = entityManager
+                .createQuery("Select distinct b from Book b left join fetch b.comments where b.id = :id", Book.class);
         bookTypedQuery.setParameter("id", id);
         bookTypedQuery.setHint(FETCH.getKey(), bookEntityGraph);
         try {

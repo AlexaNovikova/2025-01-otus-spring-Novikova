@@ -3,13 +3,12 @@ package ru.otus.hw.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.mapper.BookMapper;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
-import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
-import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,11 +16,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
-    private final AuthorRepository authorRepository;
-
-    private final GenreRepository genreRepository;
 
     private final BookRepository bookRepository;
+
+    private final BookMapper bookMapper;
 
     private final CommentRepository commentRepository;
 
@@ -44,16 +42,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Transactional
-    public Book save(long id, String title, long authorId, long genreId) {
-        var author = authorRepository.findById(authorId)
-                .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
-        var genre = genreRepository.findById(genreId)
-                .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
+    public Book save(BookDto bookDto) {
+        Book book = bookMapper.booDtoToBook(bookDto);
         List<Comment> comments = null;
-        if (id != 0) {
-            comments = commentRepository.findByBookId(id);
+        if (bookDto.getId() != 0) {
+            comments = commentRepository.findByBookId(bookDto.getId());
         }
-        var book = Book.builder().id(id).title(title).genre(genre).author(author).comments(comments).build();
+        book.setComments(comments);
         return bookRepository.save(book);
     }
 }

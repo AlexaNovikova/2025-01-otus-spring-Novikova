@@ -1,5 +1,6 @@
 package ru.otus.hw.services;
 
+import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.models.Book;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface BookService {
 
     List<Book> findAll();
 
-    Book save(long id, String title, long authorId, long genreId);
+    Book save(BookDto bookDto);
 
     void deleteById(long id);
 }

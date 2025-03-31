@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.JpaCommentRepository;
@@ -43,7 +44,7 @@ public class BookServiceIntegrationTest {
         }
     }
 
-    @DisplayName(" должен загружать все книги со всеми связанными сущностями")
+    @DisplayName(" должен загружать все книги с авторами и жанрами")
     @Test
     void shouldFindAllBooks() {
         var actualBooksList = bookService.findAll();
@@ -51,14 +52,13 @@ public class BookServiceIntegrationTest {
         var book = actualBooksList.get(0);
         assertDoesNotThrow(book::getAuthor);
         assertDoesNotThrow(book::getGenre);
-        assertDoesNotThrow(book::getComments);
     }
 
     @DisplayName(" должен сохранить новую книгу с указанными автором и жанром")
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void shouldSaveNewBookWithSpecifiedAuthorAndGenre() {
-        var saved = bookService.save(0, "NewBook", 1, 1);
+        var saved = bookService.save(new BookDto(0, "NewBook", 1, 1));
         var id = saved.getId();
         assertThat(id).isNotZero();
         var optionalBookFromDB = bookService.findById(id);
@@ -73,7 +73,7 @@ public class BookServiceIntegrationTest {
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
     @Test
     void shouldUpdateBookWithSpecifiedId() {
-        Book updated = bookService.save(1, "UpdatedBook", 2, 2);
+        Book updated = bookService.save(new BookDto(1, "UpdatedBook", 2, 2));
         assertThat(updated.getId()).isEqualTo(1L);
         assertThat(updated.getTitle()).isEqualTo("UpdatedBook");
         var updatedFromDB = bookService.findById(1L);
@@ -89,9 +89,9 @@ public class BookServiceIntegrationTest {
     @Test
     void shouldThrowEntityNotFoundException() {
         assertThrows(EntityNotFoundException.class, () ->
-                bookService.save(0, "NewBook", 5, 1));
+                bookService.save(new BookDto(0, "NewBook", 5, 1)));
         assertThrows(EntityNotFoundException.class, () ->
-                bookService.save(0, "NewBook", 1, 11));
+                bookService.save(new BookDto(0, "NewBook", 1, 11)));
     }
 
     @DisplayName(" должен удалять книгу по id вместе с комментариями")

@@ -15,7 +15,7 @@ public class BookConverter {
 
     private final CommentConverter commentConverter;
 
-    public String bookToString(Book book) {
+    public String bookToStringWithComments(Book book) {
         return "Id: %d, title: %s, author: {%s}, genres: [%s], comments: [%s]".formatted(
                 book.getId(),
                 book.getTitle(),
@@ -24,5 +24,13 @@ public class BookConverter {
                 book.getComments() != null ?
                         book.getComments().stream().map(commentConverter::commentToString)
                                 .collect(Collectors.joining("; ")) : "");
+    }
+
+    public String bookToString(Book book) {
+        return "Id: %d, title: %s, author: {%s}, genres: [%s]".formatted(
+                book.getId(),
+                book.getTitle(),
+                authorConverter.authorToString(book.getAuthor()),
+                genreConverter.genreToString(book.getGenre()));
     }
 }
