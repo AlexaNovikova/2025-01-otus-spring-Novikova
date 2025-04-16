@@ -68,6 +68,7 @@ class BookRepositoryTest {
     }
 
     @DisplayName("должен сохранять новую книгу")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void shouldSaveNewBook() {
         var author = mongoOperations.findById(FIRST_AUTHOR_ID, Author.class);
@@ -84,16 +85,18 @@ class BookRepositoryTest {
     }
 
     @DisplayName("должен обновлять книгу")
+    @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
     @Test
     void shouldSaveUpdatedBook() {
-        var newBook = new Book();
-        newBook.setTitle("Updated_book");
+        var updatedBook = mongoOperations.findById(SECOND_BOOK_ID, Book.class);
+        assertThat(updatedBook).isNotNull();
+        updatedBook.setTitle("Updated_book");
         var testGenre = mongoOperations.findById(FIRST_GENRE_ID, Genre.class);
-        newBook.setGenre(testGenre);
+        updatedBook.setGenre(testGenre);
         var testAuthor = mongoOperations.findById(FIRST_AUTHOR_ID, Author.class);
-        newBook.setAuthor(testAuthor);
+        updatedBook.setAuthor(testAuthor);
 
-        var expectedBook = bookRepository.save(newBook);
+        var expectedBook = bookRepository.save(updatedBook);
 
         assertThat(expectedBook).isNotNull();
         assertThat(expectedBook.getId()).isNotNull();
@@ -105,7 +108,7 @@ class BookRepositoryTest {
                 .isEqualTo(expectedBook);
 
         assertThat(actualBook)
-                .matches(book -> Objects.equals(book.getId(), newBook.getId()))
+                .matches(book -> Objects.equals(book.getId(), updatedBook.getId()))
                 .matches(book -> book.getTitle().equals("Updated_book"))
                 .matches(book -> Objects.equals(book.getGenre().getId(), FIRST_GENRE_ID))
                 .matches(book -> book.getAuthor() != null && Objects.equals(book.getAuthor().getId(), FIRST_AUTHOR_ID));
