@@ -1,0 +1,22 @@
+package ru.otus.hw.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class BookDtoWithComments {
+    private String id;
+
+    private String title;
+
+    private AuthorDto authorDto;
+
+    private GenreDto genreDto;
+
+    private List<CommentDto> commentDtos;
+}
