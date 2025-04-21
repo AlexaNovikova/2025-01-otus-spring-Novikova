@@ -13,7 +13,6 @@ import ru.otus.hw.repositories.CommentRepository;
 import java.util.Collections;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
@@ -38,9 +37,9 @@ public class BookServiceIntegrationTest {
             var book = optionalActualBook.get();
             assertThat(book.getTitle()).isEqualTo("BookTitle_1");
             assertThat(book)
-                    .matches(b -> b.getAuthorDto().getFullName().equals("Author_1"))
-                    .matches(b -> b.getGenreDto().getName().equals("Genre_1"))
-                    .matches(b -> b.getCommentDtos().size() == 3);
+                    .matches(b -> b.getAuthor().getFullName().equals("Author_1"))
+                    .matches(b -> b.getGenre().getName().equals("Genre_1"))
+                    .matches(b -> b.getComments().size() == 3);
         }
     }
 
@@ -51,8 +50,8 @@ public class BookServiceIntegrationTest {
         assertThat(actualBooksList.size()).isNotZero();
         var book = actualBooksList.get(0);
         assertThat(book)
-                .matches(b -> b.getAuthorDto().getFullName().equals("Author_1"))
-                .matches(b -> b.getGenreDto().getName().equals("Genre_1"));
+                .matches(b -> b.getAuthor().getFullName().equals("Author_1"))
+                .matches(b -> b.getGenre().getName().equals("Genre_1"));
     }
 
     @DisplayName(" должен сохранить новую книгу с указанными автором и жанром")
@@ -67,9 +66,8 @@ public class BookServiceIntegrationTest {
         var bookFromDb = optionalBookFromDB.get();
         assertThat(bookFromDb)
                 .matches(b -> b.getTitle().equals("NewBook"))
-                .matches(b -> b.getAuthorDto().getFullName().equals("Author_1"))
-                .matches(b -> b.getGenreDto().getName().equals("Genre_1"))
-                .matches(b -> b.getCommentDtos().isEmpty());
+                .matches(b -> b.getAuthor().getFullName().equals("Author_1"))
+                .matches(b -> b.getGenre().getName().equals("Genre_1"));
     }
 
     @DisplayName(" должен обновить книгу с указанным id")
@@ -84,9 +82,9 @@ public class BookServiceIntegrationTest {
         var bookFromDb = updatedFromDB.get();
         assertThat(bookFromDb)
                 .matches(b -> b.getTitle().equals("UpdatedBook"))
-                .matches(b -> b.getAuthorDto().getFullName().equals("Author_2"))
-                .matches(b -> b.getGenreDto().getName().equals("Genre_2"))
-                .matches(b -> b.getCommentDtos().size() == 3);
+                .matches(b -> b.getAuthor().getFullName().equals("Author_2"))
+                .matches(b -> b.getGenre().getName().equals("Genre_2"))
+                .matches(b -> b.getComments().size() == 3);
     }
 
     @DisplayName(" должен выбросить исключение EntityNotFoundException " +

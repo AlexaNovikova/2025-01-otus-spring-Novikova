@@ -3,7 +3,8 @@ package ru.otus.hw.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.dto.CommentDto;
-import ru.otus.hw.mapper.CommentMapper;
+import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.mapper.CommentToDtoConverter;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
@@ -15,23 +16,23 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private final CommentRepository commentRepository;
-
     private final BookRepository bookRepository;
 
-    private final CommentMapper commentMapper;
+    private final CommentRepository commentRepository;
+
+    private final CommentToDtoConverter commentToDtoConverter;
 
     @Override
     public List<CommentDto> findByBookId(String bookId) {
         return commentRepository.findByBookId(bookId)
                 .stream()
-                .map(commentMapper::modelToDto)
+                .map(commentToDtoConverter::convert)
                 .toList();
     }
 
     @Override
     public Optional<CommentDto> findById(String id) {
-        return commentRepository.findById(id).map(commentMapper::modelToDto);
+        return commentRepository.findById(id).map(commentToDtoConverter::convert);
     }
 
     @Override
@@ -41,7 +42,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto save(CommentDto commentDto) {
-        Comment comment = commentMapper.dtoToModel(commentDto);
-        return commentMapper.modelToDto(commentRepository.save(comment));
+        var book = bookRepository.findById(commentDto.getBookId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Book with id %s not found".formatted(commentDto.getBookId())));
+        Comment comment = commentToDtoConverter.convertToEntity(commentDto);
+        comment.setBook(book);
+        return commentToDtoConverter.convert(commentRepository.save(comment));
     }
 }

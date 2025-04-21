@@ -20,10 +20,10 @@ public class BookConverter {
         return "Id: %s, title: %s, author: {%s}, genres: [%s], comments: [%s]".formatted(
                 bookDtoWithComments.getId(),
                 bookDtoWithComments.getTitle(),
-                authorConverter.authorToString(bookDtoWithComments.getAuthorDto()),
-                genreConverter.genreToString(bookDtoWithComments.getGenreDto()),
-                bookDtoWithComments.getCommentDtos() != null ?
-                        bookDtoWithComments.getCommentDtos().stream().map(commentConverter::commentToString)
+                authorConverter.authorToString(bookDtoWithComments.getAuthor()),
+                genreConverter.genreToString(bookDtoWithComments.getGenre()),
+                bookDtoWithComments.getComments() != null ?
+                        bookDtoWithComments.getComments().stream().map(commentConverter::commentToString)
                                 .collect(Collectors.joining("; ")) : "");
     }
 
@@ -31,7 +31,7 @@ public class BookConverter {
         return "Id: %s, title: %s, author: {%s}, genres: [%s]".formatted(
                 bookDto.getId(),
                 bookDto.getTitle(),
-                authorConverter.authorToString(bookDto.getAuthorDto()),
-                genreConverter.genreToString(bookDto.getGenreDto()));
+                authorConverter.authorToString(bookDto.getAuthor()),
+                genreConverter.genreToString(bookDto.getGenre()));
     }
 }

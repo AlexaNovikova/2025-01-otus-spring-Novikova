@@ -14,9 +14,9 @@ public class BookDtoWithComments {
 
     private String title;
 
-    private AuthorDto authorDto;
+    private AuthorDto author;
 
-    private GenreDto genreDto;
+    private GenreDto genre;
 
-    private List<CommentDto> commentDtos;
+    private List<CommentDto> comments;
 }
