@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Book edition -->
+<form id="edit-form" action="edit.html" th:action="@{/edit(id=${book.id})}" th:method="post">
+    <h3>Book Info:</h3>
+
+    <div class="row" th:if="${book.id}!=null">
+        <label for="id-input">ID:</label>
+        <input id="id-input" type="text" readonly="readonly" name="id" th:value="${book.id}"/>
+    </div>
+
+    <div class="row">
+        <label for="book-title-input">Title:</label>
+        <input id="book-title-input" name="title" type="text" th:value="${book.title}"/>
+        <div class="errors" th:if="${#fields.hasErrors('book.title')}" th:errors="${book.title}">Wrong book title error</div>
+    </div>
+
+    <div class="row">
+        <label for="book-author-select">Author:</label>
+        <select id="book-author-select" name="authorId" th:value="${book.authorId}">
+            <option  th:each="entry: ${authorsMap}" th:value="${entry.key}"
+                     th:text="${entry.value.fullName}" th:selected="${book.authorId} == ${entry.key}"></option>
+        </select>
+    </div>
+
+    <div class="row">
+        <label for="book-genre-select">Genre:</label>
+        <select id="book-genre-select"  name="genreId" th:value="${book.genreId}">
+            <option  th:each="entry: ${genresMap}" th:value="${entry.key}"
+                     th:text="${entry.value.name}" th:selected="${book.genreId} == ${entry.key}"></option>
+        </select>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+        <a href="book.html" th:href="@{/book}"><button type="button">Cancel</button></a>
+    </div>
+</form>
+
+</body>
+</html>
