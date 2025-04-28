@@ -55,7 +55,7 @@ public class CommentServiceIntegrationTest {
         var optionalCommentFromDB = commentService.findById(id);
         assertThat(optionalCommentFromDB).isPresent()
                 .get()
-                .matches(c->c.getText().equals(savedComment.getText()));
+                .matches(c -> c.getText().equals(savedComment.getText()));
     }
 
     @DisplayName(" должен удалять комментарий по id")

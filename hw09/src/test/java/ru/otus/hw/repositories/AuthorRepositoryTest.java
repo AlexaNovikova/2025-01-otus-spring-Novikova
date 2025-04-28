@@ -9,6 +9,7 @@ import ru.otus.hw.models.Author;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 @DisplayName("Тестирование репозитрия на основе jpa по работе с авторами")
 @DataJpaTest
 public class AuthorRepositoryTest {

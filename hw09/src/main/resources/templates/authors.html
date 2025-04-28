@@ -2,19 +2,19 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>List of all books</title>
+    <title>List of all authors</title>
     <style type="text/css">
         body {
             padding: 50px;
         }
 
-        .books {
+        .authors {
             border: 1px solid steelblue;
             width: 300px;
             border-collapse: collapse;
         }
 
-        .books tr td, th {
+        .authors tr td, th {
             padding: 5px;
             border: 1px solid steelblue;
         }
@@ -45,32 +45,24 @@
 <body>
 
 
-<h3>Books:</h3>
+<h3>Authors:</h3>
 
-<table class="books">
+<table class="authors">
     <thead>
     <tr>
         <th>ID</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Genre</th>
+        <th>Full Name</th>
         <th>Action</th>
-        <th>Action2</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.id}">1</td>
+    <tr th:each="author : ${authors}">
+        <td th:text="${author.id}">1</td>
         <td>
-            <a th:href="@{/bookWithComments(id=${book.id})}" th:text="${book.title}">Book title</a>
-        </td>
-        <td th:text="${book.author.fullName}">Author name</td>
-        <td th:text="${book.genre.name}">Genre name</td>
-        <td>
-            <a th:href="@{/edit(id=${book.id})}" href="/edit.html">Edit</a>
+            <a th:href="@{/author/edit(id=${author.id})}" th:text="${author.fullName}">Author name</a>
         </td>
         <td>
-            <a th:href="@{/delete(id=${book.id})}" href="/book.html">Delete</a>
+            <a th:href="@{/author/delete(id=${author.id})}" href="/authors.html">Delete</a>
         </td>
     </tr>
     </tbody>
@@ -78,6 +70,9 @@
 
 <br>
 <p>
-    <a th:href="@{/edit}" href="/edit.html">Add New Book</a>
+    <a th:href="@{/author/new}" href="/editOrNewAuthorPage.html">Add New Author</a>
+<br>
+<p>
+    <a th:href="@{/books}" href="/books.html">Back to books list</a>
 </body>
 </html>

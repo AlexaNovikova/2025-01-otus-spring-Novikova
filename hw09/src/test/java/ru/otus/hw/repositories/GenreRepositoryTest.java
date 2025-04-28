@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Тестирование репозитория на основе Jpa для работы с жанрами")
 @DataJpaTest
-public class JpaGenreRepositoryTest {
+public class GenreRepositoryTest {
 
     private final static long GENRE_ID = 1L;
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookToSaveDto;
 import ru.otus.hw.dto.GenreDto;
+import ru.otus.hw.exceptions.ExceptionSupplier;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
@@ -31,52 +32,56 @@ public class BookController {
 
     private final AuthorService authorService;
 
-
-    @GetMapping("/book")
+    @GetMapping("/books")
     public String findAllBooks(Model model) {
         var books = bookService.findAll();
         model.addAttribute("books", books);
-        return "book";
+        return "books";
     }
 
-    @GetMapping("/edit")
-    public String editBook(@RequestParam(value = "id", required = false) Long id, Model model) {
-        if (id != null) {
-            var book = bookService.findById(id)
-                    .orElseThrow(NotFoundException::new);
-            model.addAttribute("book", new BookToSaveDto(book));
-        } else {
-            var book = new BookToSaveDto();
-            model.addAttribute("book", book);
-        }
-        return "edit";
+    @GetMapping("/book/edit")
+    public String openEditOrSaveNewBookPage(@RequestParam(value = "id") Long id, Model model) {
+        var book = bookService.findById(id)
+                .orElseThrow(ExceptionSupplier
+                        .createNotFoundException("Книга с указанным id не найдена"));
+        model.addAttribute("book", new BookToSaveDto(book));
+        return "editOrNewBookPage";
+    }
+
+    @GetMapping("/book/new")
+    public String openSaveNewBookPage(Model model) {
+        var book = new BookToSaveDto();
+        model.addAttribute("book", book);
+        return "editOrNewBookPage";
     }
 
     @GetMapping("/bookWithComments")
     public String previewBook(@RequestParam(value = "id") Long id, Model model) {
         var book = bookService.findById(id)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(ExceptionSupplier
+                        .createNotFoundException("Книга с указанным id не найдена"));
         model.addAttribute("book", book);
         return "bookWithComments";
     }
 
 
-    @PostMapping("/edit")
+    @PostMapping("/book/editOrSaveNew")
     public String saveBook(@Valid @ModelAttribute("book") BookToSaveDto bookDto,
                            final BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return "/edit";
+            return "editOrNewBookPage";
         }
         bookService.save(bookDto);
-        return "redirect:/book";
+        return "redirect:/books";
     }
 
-    @GetMapping("/delete")
+    @GetMapping("/book/delete")
     public String deleteBook(@RequestParam("id") Long id) {
         var book = bookService.findById(id)
-                .orElseThrow(NotFoundException::new);
+                .orElseThrow(ExceptionSupplier
+                        .createNotFoundException("Книга с указанным id не найдена"));
         bookService.deleteById(book.getId());
-        return "redirect:/book";
+        return "redirect:/books";
     }
 
     @ModelAttribute

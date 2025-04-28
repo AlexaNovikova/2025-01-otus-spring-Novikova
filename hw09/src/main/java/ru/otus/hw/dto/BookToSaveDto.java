@@ -21,7 +21,7 @@ public class BookToSaveDto {
     @Min(value = 1, message = "Автор книги должен быть указан")
     private Long authorId;
 
-    @Min( value = 1, message = "Жанр книги должен быть указан")
+    @Min(value = 1, message = "Жанр книги должен быть указан")
     private Long genreId;
 
     public BookToSaveDto(BookDtoWithComments bookDto) {
