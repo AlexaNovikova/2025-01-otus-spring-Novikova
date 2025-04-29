@@ -84,26 +84,4 @@ public class BookServiceImpl implements BookService {
         book.setComments(comments);
         return bookRepository.save(book);
     }
-
-//    @Transactional
-//    public Book save(BookDto bookDto) {
-//        var author = authorRepository.findById(bookDto.getAuthor().getId())
-//                .orElseThrow(() ->
-//                        new EntityNotFoundException
-//                                ("Author with fullName %s not found".formatted(bookDto.getAuthor().getId())));
-//        var genre = genreRepository.findById(bookDto.getGenre().getId())
-//                .orElseThrow(() ->
-//                        new EntityNotFoundException
-//                                ("Genre with name %s not found".formatted(bookDto.getGenre().getId())));
-//
-//        Book book = bookToDtoConverter.convertToEntity(bookDto);
-////        book.setGenre(genre);
-////        book.setAuthor(author);
-//        List<Comment> comments = null;
-//        if (book.getId() != 0) {
-//            comments = commentRepository.findByBookId(book.getId());
-//        }
-//        book.setComments(comments);
-//        return bookRepository.save(book);
-//    }
 }
