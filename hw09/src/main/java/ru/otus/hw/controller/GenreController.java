@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.otus.hw.dto.GenreDto;
-import ru.otus.hw.exceptions.ExceptionSupplier;
 import ru.otus.hw.services.GenreService;
 
 @Controller
@@ -40,11 +39,8 @@ public class GenreController {
     }
 
     @GetMapping("/genre/delete")
-    public String deleteGenre(@RequestParam("id") Long id) {
-        var genre = genreService.findById(id)
-                .orElseThrow(ExceptionSupplier
-                        .createNotFoundException("Жанр с указанным id не найден"));
-        genreService.deleteById(genre.getId());
+    public String deleteGenre(@RequestParam Long id) {
+        genreService.deleteById(id);
         return "redirect:/genres";
     }
 }

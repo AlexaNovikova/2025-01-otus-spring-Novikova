@@ -6,8 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.otus.hw.dto.CommentDto;
-import ru.otus.hw.exceptions.ExceptionSupplier;
 import ru.otus.hw.services.CommentService;
 
 @Slf4j
@@ -18,12 +16,9 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/comment/delete")
-    public String deleteComment(@RequestParam("id") Long id,
-                                @RequestParam("bookId") Long bookId) {
-        var comment = commentService.findById(id)
-                .orElseThrow(ExceptionSupplier
-                        .createNotFoundException("Комментарий с указанным id не найден"));
-        commentService.deleteById(comment.getId());
+    public String deleteComment(@RequestParam Long id,
+                                @RequestParam Long bookId) {
+        commentService.deleteById(id);
         return "redirect:/bookWithComments?id=" + bookId;
     }
 

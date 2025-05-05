@@ -13,18 +13,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.Builder;
 
 import java.util.List;
-import java.util.Objects;
 
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -41,16 +38,19 @@ public class Book {
     private String title;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private Author author;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id", nullable = false)
     private Genre genre;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "book")
     private List<Comment> comments;
 
@@ -59,21 +59,5 @@ public class Book {
         this.title = title;
         this.author = author;
         this.genre = genre;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Book book)) {
-            return false;
-        }
-        return getId() == book.getId() && Objects.equals(getTitle(), book.getTitle());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getTitle());
     }
 }

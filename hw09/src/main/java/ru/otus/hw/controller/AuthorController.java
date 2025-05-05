@@ -29,7 +29,7 @@ public class AuthorController {
     }
 
     @GetMapping("/author/edit")
-    public String openEditOrSaveNewAuthorPage(@RequestParam(value = "id") Long id, Model model) {
+    public String openEditOrSaveNewAuthorPage(@RequestParam Long id, Model model) {
         var author = authorService.findById(id)
                 .orElseThrow(ExceptionSupplier
                         .createNotFoundException("Автор с указанным id не найден"));
@@ -55,11 +55,8 @@ public class AuthorController {
     }
 
     @GetMapping("/author/delete")
-    public String deleteAuthor(@RequestParam("id") Long id) {
-        var author = authorService.findById(id)
-                .orElseThrow(ExceptionSupplier
-                        .createNotFoundException("Автор с указанным id не найден"));
-        authorService.deleteById(author.getId());
+    public String deleteAuthor(@RequestParam Long id) {
+        authorService.deleteById(id);
         return "redirect:/authors";
     }
 }

@@ -40,7 +40,7 @@ public class BookController {
     }
 
     @GetMapping("/book/edit")
-    public String openEditOrSaveNewBookPage(@RequestParam(value = "id") Long id, Model model) {
+    public String openEditOrSaveNewBookPage(@RequestParam Long id, Model model) {
         var book = bookService.findById(id)
                 .orElseThrow(ExceptionSupplier
                         .createNotFoundException("Книга с указанным id не найдена"));
@@ -56,7 +56,7 @@ public class BookController {
     }
 
     @GetMapping("/bookWithComments")
-    public String previewBook(@RequestParam(value = "id") Long id, Model model) {
+    public String previewBook(@RequestParam Long id, Model model) {
         var book = bookService.findById(id)
                 .orElseThrow(ExceptionSupplier
                         .createNotFoundException("Книга с указанным id не найдена"));
@@ -76,11 +76,8 @@ public class BookController {
     }
 
     @GetMapping("/book/delete")
-    public String deleteBook(@RequestParam("id") Long id) {
-        var book = bookService.findById(id)
-                .orElseThrow(ExceptionSupplier
-                        .createNotFoundException("Книга с указанным id не найдена"));
-        bookService.deleteById(book.getId());
+    public String deleteBook(@RequestParam Long id) {
+        bookService.deleteById(id);
         return "redirect:/books";
     }
 

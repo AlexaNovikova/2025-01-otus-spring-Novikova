@@ -10,19 +10,14 @@ import jakarta.persistence.Table;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.Builder;
 
-import java.util.Objects;
-
-@Getter
-@Setter
-@ToString
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,23 +34,9 @@ public class Comment {
     private String text;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     private Book book;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Comment comment)) {
-            return false;
-        }
-        return getId() == comment.getId() && Objects.equals(getText(), comment.getText());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getText());
-    }
 }
