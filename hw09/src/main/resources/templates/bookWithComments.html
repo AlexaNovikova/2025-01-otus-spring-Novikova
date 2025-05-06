@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Book info</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .books td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<h3>Book info:</h3>
+
+<table class="books">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genre</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${book.id}">1</td>
+        <td th:text="${book.title}">Book title</td>
+        <td th:text="${book.author.fullName}">Author name</td>
+        <td th:text="${book.genre.name}">Genre name</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+
+<h3>Book comments:</h3>
+<table class="books">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Text</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="comment : ${book.comments}">
+        <td th:text="${comment.id}">1</td>
+        <td th:text="${comment.text}">comment text</td>
+        <td>
+            <a th:href="@{/comment/delete(id=${comment.id},bookId=${book.id})}" href="/bookWithComments.html">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<h2>Add New Comment</h2>
+<form th:action="@{/comment/save(id=${book.id})}" th:method="post">
+
+    <div class="row">
+        <label for="comment-text-input">Text:</label>
+        <textarea id="comment-text-input" name="text" type="text"></textarea>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+    </div>
+</form>
+<br>
+<p>
+    <a th:href="@{/books}" href="/books.html">Back to books list</a>
+</body>
+</html>
