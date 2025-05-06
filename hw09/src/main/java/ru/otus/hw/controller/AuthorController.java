@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.otus.hw.dto.AuthorDto;
-import ru.otus.hw.exceptions.ExceptionSupplier;
 import ru.otus.hw.services.AuthorService;
 
 @Slf4j
@@ -31,8 +30,7 @@ public class AuthorController {
     @GetMapping("/author/edit")
     public String openEditOrSaveNewAuthorPage(@RequestParam Long id, Model model) {
         var author = authorService.findById(id)
-                .orElseThrow(ExceptionSupplier
-                        .createNotFoundException("Автор с указанным id не найден"));
+                .orElseThrow(() -> new NotFoundException("Автор с указанным id не найден."));
         model.addAttribute("author", author);
         return "editOrNewAuthorPage";
     }

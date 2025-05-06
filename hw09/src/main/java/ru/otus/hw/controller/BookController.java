@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.BookToSaveDto;
 import ru.otus.hw.dto.GenreDto;
-import ru.otus.hw.exceptions.ExceptionSupplier;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
@@ -42,8 +41,7 @@ public class BookController {
     @GetMapping("/book/edit")
     public String openEditOrSaveNewBookPage(@RequestParam Long id, Model model) {
         var book = bookService.findById(id)
-                .orElseThrow(ExceptionSupplier
-                        .createNotFoundException("Книга с указанным id не найдена"));
+                .orElseThrow(() -> new NotFoundException("Книга с указанным id не найдена"));
         model.addAttribute("book", new BookToSaveDto(book));
         return "editOrNewBookPage";
     }
@@ -58,8 +56,7 @@ public class BookController {
     @GetMapping("/bookWithComments")
     public String previewBook(@RequestParam Long id, Model model) {
         var book = bookService.findById(id)
-                .orElseThrow(ExceptionSupplier
-                        .createNotFoundException("Книга с указанным id не найдена"));
+                .orElseThrow(() -> new NotFoundException("Книга с указанным id не найдена"));
         model.addAttribute("book", book);
         return "bookWithComments";
     }
