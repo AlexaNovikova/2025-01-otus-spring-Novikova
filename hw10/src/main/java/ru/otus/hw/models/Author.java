@@ -12,17 +12,14 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.CascadeType;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Objects;
 
-@Getter
-@Setter
-@ToString
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -38,22 +35,8 @@ public class Author {
     private String fullName;
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Book> bookList;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Author author)) {
-            return false;
-        }
-        return getId() == author.getId() && Objects.equals(getFullName(), author.getFullName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getFullName());
-    }
 }
