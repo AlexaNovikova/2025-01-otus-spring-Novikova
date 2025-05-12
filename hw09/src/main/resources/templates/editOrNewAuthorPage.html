@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit or add new author</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Book edition -->
+<form id="edit-form" action="editOrNewAuthorPage.html" th:action="@{/author/editOrSaveNew(id=${author.id})}"
+      th:object="${author}" th:method="post">
+    <h3>Author Info:</h3>
+
+    <div class="row" th:if="*{id}!=null">
+        <label for="id-input">ID:</label>
+        <input id="id-input" type="text" readonly="readonly" name="id" th:value="*{id}"/>
+    </div>
+
+    <div class="row">
+        <label for="author-fullName-input">Full name:</label>
+        <input id="author-fullName-input" name="fullName" type="text" th:value="*{fullName}"/>
+        <div class="errors" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Wrong author full name error</div>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+        <a href="athors.html" th:href="@{/authors}"><button type="button">Cancel</button></a>
+    </div>
+</form>
+
+</body>
+</html>

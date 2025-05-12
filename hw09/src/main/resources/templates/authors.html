@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all authors</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .authors {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .authors tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .books td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        h3 {
+            background-image: url("../static/listmark.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<h3>Authors:</h3>
+
+<table class="authors">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="author : ${authors}">
+        <td th:text="${author.id}">1</td>
+        <td>
+            <a th:href="@{/author/edit(id=${author.id})}" th:text="${author.fullName}">Author name</a>
+        </td>
+        <td>
+            <a th:href="@{/author/delete(id=${author.id})}" href="/authors.html">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<br>
+<p>
+    <a th:href="@{/author/new}" href="/editOrNewAuthorPage.html">Add New Author</a>
+<br>
+<p>
+    <a th:href="@{/books}" href="/books.html">Back to books list</a>
+</body>
+</html>
