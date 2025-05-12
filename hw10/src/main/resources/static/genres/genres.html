@@ -1,0 +1,34 @@
+<p></p>
+
+<p></p>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Наименование</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="g in genres">
+        <td>{{g.id}}</td>
+        <td>{{g.name}}</td>
+        <td>
+            <button class="btn btn-outline-primary" ng-click="deleteGenre(g.id)">Удалить</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p></p>
+<h3>Добавить новый жанр</h3>
+<div>
+    <form novalidate ng-submit="addNewGenre(name)">
+        <div class="mb-3">
+            <label for="inputText" class="form-label">Название</label>
+            <input type="text" class="form-control" ng-model="name" id="inputText" aria-describedby="textHelp">
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
+
