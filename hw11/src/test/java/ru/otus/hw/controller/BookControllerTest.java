@@ -210,6 +210,11 @@ public class BookControllerTest {
     @Test
     void shouldDeleteBookById() throws Exception {
         given(bookRepository.findById("b1")).willReturn(Mono.just(books.get(0)));
+        given(bookRepository.delete(books.get(0))).willReturn(Mono.empty());
+        List<Comment> comments = List.of(comment);
+        given(commentRepository.deleteAll(comments)).willReturn(Mono.empty());
+        given(commentRepository.findByBookId("b1"))
+                .willReturn(Flux.fromIterable(comments));
 
         webTestClient.delete()
                 .uri(uriBuilder ->

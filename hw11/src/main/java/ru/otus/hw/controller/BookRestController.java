@@ -152,9 +152,8 @@ public class BookRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> deleteBook(@RequestParam("id") String id) {
         return bookRepository.findById(id)
-                .switchIfEmpty(Mono.error(new EntityNotFoundException("Book is not found")))
-                .flatMap(b -> commentRepository.deleteAll(b.getComments()))
-                .then(bookRepository.deleteById(id));
-
+                .zipWith(commentRepository.findByBookId(id).collectList())
+                .flatMap(tuple -> commentRepository.deleteAll(tuple.getT2())
+                        .then(bookRepository.delete(tuple.getT1())));
     }
 }

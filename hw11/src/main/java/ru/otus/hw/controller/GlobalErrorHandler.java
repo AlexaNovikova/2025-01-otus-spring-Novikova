@@ -24,7 +24,9 @@ public class GlobalErrorHandler {
     @AllArgsConstructor
     public static class ErrorResponse {
         private int status;
+
         private String message;
+
         private List<String> details;
 
         public ErrorResponse(int status, String message) {

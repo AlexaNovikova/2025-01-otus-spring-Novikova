@@ -109,5 +109,6 @@ class BookRepositoryTest {
                 .expectNextCount(0)
                 .expectComplete()
                 .verify();
+
     }
 }
