@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +17,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 import ru.otus.hw.dto.BookDto;
 import ru.otus.hw.dto.BookDtoWithComments;
 import ru.otus.hw.dto.BookToSaveDto;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.mapper.BookToDtoConverter;
+import ru.otus.hw.models.Author;
+import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
+import ru.otus.hw.models.Genre;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
@@ -73,17 +76,17 @@ public class BookRestController {
                 .flatMap(book -> commentRepository
                         .save(new Comment(String.valueOf(UUID.randomUUID()), text, book))
                         .zipWith(bookRepository.findById(id))
-                        .flatMap(tuple -> {
-                            var bookWithComments = tuple.getT2();
-                            var comment = tuple.getT1();
-                            if (bookWithComments.getComments() != null) {
-                                bookWithComments.getComments().add(comment);
-                            } else {
-                                bookWithComments.setComments(List.of(comment));
-                            }
-                            return bookRepository.save(bookWithComments)
-                                    .map(bookToDtoConverter::convertToBookDtoWithComments);
-                        }));
+                        .flatMap(tuple -> saveBookWithNewComment(tuple.getT2(), tuple.getT1()))
+                        .map(bookToDtoConverter::convertToBookDtoWithComments));
+    }
+
+    private Mono<Book> saveBookWithNewComment(Book book, Comment comment) {
+        if (book.getComments() != null) {
+            book.getComments().add(comment);
+        } else {
+            book.setComments(List.of(comment));
+        }
+        return bookRepository.save(book);
     }
 
     @DeleteMapping("/{id}/comments/{commentId}")
@@ -109,16 +112,16 @@ public class BookRestController {
                         .switchIfEmpty(Mono.error(new EntityNotFoundException
                                 ("Author with fullName %s not found"
                                         .formatted(bookToSaveDto.getAuthorId())))))
-                .flatMap(tuple -> {
-                    var genre = tuple.getT1();
-                    var author = tuple.getT2();
-                    var newBook = bookToDtoConverter.convertToEntity(bookToSaveDto);
-                    newBook.setId(String.valueOf(UUID.randomUUID()));
-                    newBook.setAuthor(author);
-                    newBook.setGenre(genre);
-                    return bookRepository.save(newBook)
-                            .map(bookToDtoConverter::convert);
-                });
+                .flatMap(tuple -> saveNewBook(tuple.getT1(), tuple.getT2(), bookToSaveDto)
+                        .map(bookToDtoConverter::convert));
+    }
+
+    private Mono<Book> saveNewBook(Genre genre, Author author, BookToSaveDto bookToSaveDto) {
+        var newBook = bookToDtoConverter.convertToEntity(bookToSaveDto);
+        newBook.setId(String.valueOf(UUID.randomUUID()));
+        newBook.setAuthor(author);
+        newBook.setGenre(genre);
+        return bookRepository.save(newBook);
     }
 
     @PutMapping
@@ -131,21 +134,20 @@ public class BookRestController {
                         .switchIfEmpty(Mono.error(new EntityNotFoundException
                                 ("Author with fullName %s not found"
                                         .formatted(bookToSaveDto.getAuthorId())))))
-                .flatMap(tuple ->
-                        bookRepository.findById(bookToSaveDto.getId())
-                                .switchIfEmpty(
-                                        Mono.error(new EntityNotFoundException
-                                                ("Book with id %s not found"
-                                                        .formatted(bookToSaveDto.getId()))))
-                                .flatMap(book -> {
-                                    var genre = tuple.getT1();
-                                    var author = tuple.getT2();
-                                    book.setGenre(genre);
-                                    book.setAuthor(author);
-                                    book.setTitle(bookToSaveDto.getTitle());
-                                    return bookRepository.save(book)
-                                            .map(bookToDtoConverter::convert);
-                                }));
+                .flatMap(tuple -> updateBookEntity(bookToSaveDto, tuple)
+                        .map(bookToDtoConverter::convert));
+    }
+
+    private Mono<Book> updateBookEntity(BookToSaveDto bookToSaveDto, Tuple2<Genre, Author> entities) {
+        return bookRepository.findById(bookToSaveDto.getId())
+                .switchIfEmpty(Mono.error(new EntityNotFoundException("Book with id %s not found"
+                        .formatted(bookToSaveDto.getId()))))
+                .map(book -> {
+                    book.setGenre(entities.getT1());
+                    book.setAuthor(entities.getT2());
+                    book.setTitle(bookToSaveDto.getTitle());
+                    return book;
+                });
     }
 
     @DeleteMapping
