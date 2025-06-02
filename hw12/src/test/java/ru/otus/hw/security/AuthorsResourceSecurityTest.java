@@ -12,6 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.config.SecurityConfiguration;
 import ru.otus.hw.controller.AuthorRestController;
 import ru.otus.hw.dto.AuthorDto;
+import ru.otus.hw.dto.BookDto;
+import ru.otus.hw.dto.BookToSaveDto;
 import ru.otus.hw.services.AuthorService;
 
 import java.util.List;
@@ -49,10 +51,6 @@ public class AuthorsResourceSecurityTest {
 
         when(authorService.findById(1L)).thenReturn(Optional.ofNullable(authorsList.get(0)));
 
-        AuthorDto authorDto = new AuthorDto(1L, "Author1");
-        given(authorService.save(any())).willReturn(authorDto);
-        String expectedResult = mapper.writeValueAsString(authorDto);
-
         mockMvc.perform(get("/api/v1/authors")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -60,12 +58,36 @@ public class AuthorsResourceSecurityTest {
         mockMvc.perform(get("/api/v1/authors/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
+    @Test
+    public void testPostHttpMethodOnlyForAdmin() throws Exception {
+
+        AuthorDto authorDto = new AuthorDto(1L, "Author1");
+        given(authorService.save(any())).willReturn(authorDto);
+        String expectedResult = mapper.writeValueAsString(authorDto);
 
         mockMvc.perform(post("/api/v1/authors")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(expectedResult))
                 .andExpect(status().isOk());
     }
+
+    @WithMockUser(username = "user", authorities = {"ROLE_USER"})
+    @Test
+    public void testPostHttpMethodAccessDeniedForNotAdmin() throws Exception {
+
+        AuthorDto authorDto = new AuthorDto(1L, "Author1");
+        given(authorService.save(any())).willReturn(authorDto);
+        String expectedResult = mapper.writeValueAsString(authorDto);
+
+        mockMvc.perform(post("/api/v1/authors")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(expectedResult))
+                .andExpect(status().isForbidden());
+    }
+
 
     @Test
     public void redirectsToLoginFormIfNotAuthenticated() throws Exception {

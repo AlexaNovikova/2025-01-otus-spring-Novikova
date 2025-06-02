@@ -11,6 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.config.SecurityConfiguration;
 import ru.otus.hw.controller.GenreRestController;
+import ru.otus.hw.dto.AuthorDto;
 import ru.otus.hw.dto.GenreDto;
 import ru.otus.hw.services.GenreService;
 
@@ -49,10 +50,6 @@ public class GenreResourceSecurityTest {
 
         when(genreService.findById(1L)).thenReturn(Optional.ofNullable(genreDtoList.get(0)));
 
-        GenreDto genreDto = new GenreDto(1L, "Genre1");
-        given(genreService.save(any())).willReturn(genreDto);
-        String expectedResult = mapper.writeValueAsString(genreDto);
-
         mockMvc.perform(get("/api/v1/genres")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -60,12 +57,36 @@ public class GenreResourceSecurityTest {
         mockMvc.perform(get("/api/v1/genres/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
+    @Test
+    public void testPostHttpMethodOnlyForAdmin() throws Exception {
+
+        GenreDto genreDto = new GenreDto(1L, "Genre1");
+        given(genreService.save(any())).willReturn(genreDto);
+        String expectedResult = mapper.writeValueAsString(genreDto);
 
         mockMvc.perform(post("/api/v1/genres")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(expectedResult))
                 .andExpect(status().isOk());
     }
+
+    @WithMockUser(username = "user", authorities = {"ROLE_USER"})
+    @Test
+    public void testPostHttpMethodAccessDeniedForNotAdmin() throws Exception {
+
+        GenreDto genreDto = new GenreDto(1L, "Genre1");
+        given(genreService.save(any())).willReturn(genreDto);
+        String expectedResult = mapper.writeValueAsString(genreDto);
+
+        mockMvc.perform(post("/api/v1/genres")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(expectedResult))
+                .andExpect(status().isForbidden());
+    }
+
 
     @Test
     public void redirectsToLoginFormIfNotAuthenticated() throws Exception {

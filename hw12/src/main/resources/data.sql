@@ -17,8 +17,8 @@ values ('comment_1 to book_1', 1),
 
 insert into roles (name)
 values
-('ROLE_USER'),
-('ROLE_ADMIN');
+('USER'),
+('ADMIN');
 
 insert into users (username, password, email)
 values

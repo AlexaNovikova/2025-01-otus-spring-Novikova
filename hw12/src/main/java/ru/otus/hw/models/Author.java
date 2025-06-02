@@ -39,4 +39,8 @@ public class Author {
     @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Book> bookList;
 
+    public Author(Long id, String fullName) {
+        this.id = id;
+        this.fullName = fullName;
+    }
 }
