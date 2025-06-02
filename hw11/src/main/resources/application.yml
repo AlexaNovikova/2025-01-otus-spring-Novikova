@@ -1,0 +1,19 @@
+server:
+  port: 8189
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:30002/mongod
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.hw.mongock.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
+logging:
+  level:
+    root: DEBUG
