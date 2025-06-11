@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Author;
+import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 
 import java.util.Collections;
