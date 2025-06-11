@@ -1,0 +1,55 @@
+spring:
+  data:
+    mongodb:
+      port: 27017
+      database: library
+
+  batch:
+    job:
+      enabled: false
+
+  datasource:
+    url: jdbc:h2:mem:maindb
+    driverClassName: org.h2.Driver
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.hw.mongock.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
+  h2:
+    console:
+      path: /h2
+      settings:
+        web-allow-others: true
+
+  shell:
+    interactive:
+      enabled: true
+    noninteractive:
+      enabled: false
+
+    command:
+      version:
+        enabled: false
+
+  logging:
+    level:
+      ROOT: ERROR
