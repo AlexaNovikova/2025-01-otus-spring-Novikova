@@ -1,0 +1,23 @@
+server:
+  port: 8189
+  servlet:
+    context-path: /library
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:test_data.sql
+      schema-locations: classpath:schema.sql
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+
+  logging:
+    level:
+      ROOT: ERROR
