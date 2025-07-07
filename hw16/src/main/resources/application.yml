@@ -1,0 +1,50 @@
+server:
+  port: 8189
+  servlet:
+    context-path: /library
+spring:
+  datasource:
+    url: jdbc:h2:mem:maindb
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+
+  data:
+    rest:
+      basePath: /datarest
+      default-page-size: 20
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: when_authorized
+      roles: "ADMIN"
+  health:
+    defaults:
+      enabled: true
+
+logging:
+  level:
+    root: DEBUG
+    org.springframework.web: ERROR
+    org.hibernate: ERROR
+  pattern:
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  file.name: ./log/library.log
+
+
+
+
