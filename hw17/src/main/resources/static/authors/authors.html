@@ -1,0 +1,33 @@
+<p></p>
+
+<p></p>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">ФИО</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="a in authors">
+        <td>{{a.id}}</td>
+        <td>{{a.fullName}}</td>
+        <td>
+            <button class="btn btn-outline-primary" ng-click="deleteAuthor(a.id)">Удалить</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p></p>
+<h3>Добавить нового автора</h3>
+<div>
+    <form novalidate ng-submit="addNewAuthor(fullName)">
+        <div class="mb-3">
+            <label for="inputText" class="form-label">ФИО</label>
+            <input type="text" class="form-control" ng-model="fullName" id="inputText" aria-describedby="textHelp">
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
