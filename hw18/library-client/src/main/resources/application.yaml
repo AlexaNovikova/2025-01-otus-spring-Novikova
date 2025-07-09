@@ -1,0 +1,44 @@
+server:
+  port: 7001
+
+spring:
+  application:
+    name: library-client
+  cloud:
+    discovery:
+      enabled: true
+    loadbalancer:
+      retry:
+        enable: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 50
+        slidingWindowType: TIME_BASED
+        failureRateThreshold: 25
+
+eureka:
+  client:
+    fetchRegistry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:9999/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 30
+
+logging:
+  level:
+    root: DEBUG
+    org.springframework.web: ERROR
+    org.hibernate: ERROR
