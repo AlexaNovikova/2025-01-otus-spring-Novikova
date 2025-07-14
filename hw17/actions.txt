@@ -1,0 +1,5 @@
+
+ Hal explorer доступен по адресу:
+
+ http://localhost:8189/library/datarest/explorer/index.html#uri=/library/datarest
+
