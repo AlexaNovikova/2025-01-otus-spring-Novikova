@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.1</version>
+        <relativePath/>
+    </parent>
+    <groupId>ru.otus</groupId>
+    <artifactId>Otus-spring-project</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>Otus-spring-project</name>
+    <description>OTUS Spring project</description>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>parent-pom</module>
+        <module>parent-pom/libraries-parent</module>
+        <module>parent-pom/gateway-parent</module>
+        <module>parent-pom/microservices-parent</module>
+
+        <module>common</module>
+
+        <module>libs/shop-exceptions-lib</module>
+        <module>libs/redis-lib</module>
+        <module>libs/kafka-lib</module>
+        <module>libs/context-lib</module>
+
+        <module>libs/api/auth-service-api/auth-common</module>
+
+        <module>libs/api/inventory-service/inventory-service-api</module>
+        <module>libs/api/inventory-service/inventory-service-client</module>
+
+        <module>libs/api/product-service/product-service-api</module>
+        <module>libs/api/product-service/product-service-client</module>
+
+        <module>microservices/auth-gateway/auth-gateway</module>
+
+        <module>microservices/auth-service/auth-service</module>
+
+        <module>microservices/inventory-service/inventory-service</module>
+
+        <module>microservices/product-service/product-service</module>
+
+        <module>microservices/order-service/order-service</module>
+
+        <module>microservices/payment-service/payment-service</module>
+
+        <module>microservices/notification-service/notification-service</module>
+
+        <module>microservices/eureka-server/eureka-server</module>
+
+    </modules>
+</project>

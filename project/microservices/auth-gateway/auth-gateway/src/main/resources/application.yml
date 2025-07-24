@@ -1,0 +1,78 @@
+server:
+  port: 8089
+spring:
+  application:
+    name: auth-gateway
+  cloud:
+    discovery:
+      enabled: true
+    loadbalancer:
+      retry:
+        enabled: false
+    gateway:
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+        - id: reg-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/register/**
+        - id: user-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/user/**
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/api/v1/product/**
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/v1/order/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/api/v1/account/**
+
+jwt:
+  secret: 387940124e629097d9b3b557b6edd868ee39d76b3f29b334f264a05c6eed75f3f90e0c275000851c5f11e4bad794b88867e34180e9f8e8534f28ed30c5b275ab
+  expirationInMs: 60000
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://localhost:9999/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    lease-renewal-interval-in-seconds: 30
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, metrics
+  metrics:
+    enable:
+      timed: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    ru.otus: DEBUG
